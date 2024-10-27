@@ -1,3 +1,24 @@
+async function getlocality(latitude,longitude){
+    const response = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`)
+        const locality = await response.json()
+
+    return locality.locality || "unknown locality";
+}
+
+async function markerslocaility(){
+    const localities = []
+    for(const [lat,long] of [[lat1,long1],[lat2,long2],[lat3,long3]]){
+        const locality = await getlocality(lat,long);
+        localities.push(locality);
+    } return localities
+    
+
+    
+};
+
+
+
+
 function addMap() {
     var map = L.map('map').setView([38.79, -106.53], 13);
 
@@ -16,7 +37,7 @@ function addMap() {
 
 // 38.7946° N, 106.5348° W
 
-window.onload = addMap;
+
 
 
 function getRandomInRange(from, to, fixed) {
@@ -38,9 +59,22 @@ const long3 = getRandomInRange(-90, -100, 3); // long
 console.log(lat3)
 console.log(long3)
 
+window.onload = async() =>{
+await markerslocaility();
+addMap();
+const localities = await markerslocaility();
+
+
 document.getElementById("marker1").innerText="Marker 1: Latitude: " + lat1 + ", "+ "Longitude: " + long1;
+document.getElementById('locality1').innerText = "Locality: " + localities[0]
+
 document.getElementById("marker2").innerText="Marker 2: Latitude: " + lat2 + ", "+ "Longitude: " + long2;
+document.getElementById('locality2').innerText = "Locality: " + localities[1]
+
 document.getElementById("marker3").innerText="Marker 3: Latitude: " + lat3 + ", " + "Longitude: " + long3;
+document.getElementById('locality3').innerText = "Locality: " + localities[2]
+
+}
 
 // document.getElementById("marker2").innerText="Computer Chose:" + computerChoice;
 // document.getElementById("marker3").innerText="Computer Chose:" + computerChoice;
